@@ -19,6 +19,7 @@ const Create = ({ placeholder }) => {
         register,
         handleSubmit,
         watch,
+        setError,
         formState: { errors },
     } = useForm();
 
@@ -35,8 +36,9 @@ const Create = ({ placeholder }) => {
 
 
     const saveProduct = async (data) => {
+
+        const formData = { ...data, "description": content };
         setDisable(true);
-        console.log(data);
         const res = await fetch(`${apiUrl}/products`, {
             method: 'POST',
             headers: {
@@ -44,7 +46,7 @@ const Create = ({ placeholder }) => {
                 'accept': 'application/json',
                 'Authorization': `Bearer ${adminToken()}`
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(formData)
         }).then(res => res.json())
             .then(result => {
                 setDisable(false);
@@ -53,7 +55,10 @@ const Create = ({ placeholder }) => {
                     navigate('/admin/products');
                 }
                 else {
-                    console.log("something went wrong");
+                    const formErrors = result.errors;
+                    Object.keys(formErrors).forEach((field) => {
+                        setError(field, { message: formErrors[field[0]] });
+                    })
                 }
 
             })
@@ -136,11 +141,11 @@ const Create = ({ placeholder }) => {
                                                 <label htmlFor="" >Category</label>
                                                 <select
                                                     {
-                                                    ...register("category", {
+                                                    ...register("category_id", {
                                                         required: 'The category field is required',
                                                     })
                                                     }
-                                                    className={`form-control ${errors.category && "is-invalid"}`}>
+                                                    className={`form-control ${errors.category_id && "is-invalid"}`}>
                                                     <option value="">Select a category</option>
                                                     {
                                                         categories.map((category) => {
@@ -151,15 +156,19 @@ const Create = ({ placeholder }) => {
                                                     }
                                                 </select>
                                                 {
-                                                    errors.category &&
-                                                    <p className="invalid-feedback">{errors.category?.message}</p>
+                                                    errors.category_id &&
+                                                    <p className="invalid-feedback">{errors.category_id?.message}</p>
                                                 }
                                             </div>
                                         </div>
                                         <div className="col-md-6">
                                             <div className="mb-3">
                                                 <label htmlFor="" className="form-label">Brand</label>
-                                                <select className="form-control">
+                                                <select
+                                                    {
+                                                    ...register("brand_id")
+                                                    }
+                                                    className="form-control">
                                                     <option value="">Select a brand</option>
                                                     {
                                                         brands.map((brand) => {
@@ -175,7 +184,11 @@ const Create = ({ placeholder }) => {
 
                                     <div className="mb-3">
                                         <label htmlFor="" className="form-label">Short Description</label>
-                                        <textarea className="form-control" rows={3}></textarea>
+                                        <textarea
+                                            {
+                                            ...register("short_description")
+                                            }
+                                            className="form-control" rows={3}></textarea>
                                     </div>
 
                                     <div className="mb-3">
@@ -210,7 +223,12 @@ const Create = ({ placeholder }) => {
                                         <div className="col-md-6">
                                             <div className="mb-3">
                                                 <label htmlFor="" className="form-label">Discounted Price</label>
-                                                <input type="text" placeholder='Discounted Price' className='form-control' />
+                                                <input
+
+                                                    {
+                                                    ...register("compare_price")
+                                                    }
+                                                    type="text" placeholder='Discounted Price' className='form-control' />
 
                                             </div>
                                         </div>
@@ -236,7 +254,11 @@ const Create = ({ placeholder }) => {
                                         <div className="col-md-6">
                                             <div className="mb-3">
                                                 <label htmlFor="" className="form-label">Barcode</label>
-                                                <input type="text" placeholder='barcode' className='form-control' />
+                                                <input
+                                                    {
+                                                    ...register("barcode")
+                                                    }
+                                                    type="text" placeholder='barcode' className='form-control' />
 
                                             </div>
                                         </div>
@@ -252,7 +274,7 @@ const Create = ({ placeholder }) => {
                                                         required: 'The quantity field is required',
                                                     })
                                                     }
-                                                    type="text" placeholder='enter quantity' className={`form-control ${errors.sku && "is-invalid"}`} />
+                                                    type="text" placeholder='enter quantity' className={`form-control ${errors.quantity && "is-invalid"}`} />
                                                 {
                                                     errors.quantity &&
                                                     <p className="invalid-feedback">{errors.quantity?.message}</p>
@@ -287,10 +309,11 @@ const Create = ({ placeholder }) => {
                                                 {
                                                 ...register("is_featured", {
                                                     required: 'please select a featured or not',
+                                                    valueAsNumber: true
                                                 })
                                                 }
                                                 className={`form-control ${errors.is_featured && "is-invalid"}`}>
-
+                                                <option value="">Select a is featured</option>
                                                 <option value="1">Yes</option>
                                                 <option value="0">No</option>
                                             </select>
