@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react'
 import Layout from '../../common/Layout'
 import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../../common/Sidebar'
-import { set, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify';
 import { adminToken, apiUrl } from '../../common/http'
 import JoditEditor from 'jodit-react';
@@ -32,9 +32,6 @@ const Create = ({ placeholder }) => {
         }),
         [placeholder]
     );
-
-
-
 
 
     const saveProduct = async (data) => {
