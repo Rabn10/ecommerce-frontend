@@ -15,6 +15,8 @@ const Edit = ({ placeholder }) => {
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [sizes, setSizes] = useState([]);
+    const [sizesChecked, setSizesChecked] = useState([]);
+
     const [productImages, setProductImages] = useState([]);
     const navigate = useNavigate();
     const params = useParams();
@@ -38,6 +40,7 @@ const Edit = ({ placeholder }) => {
                 .then(res => res.json())
                 .then(result => {
                     setProductImages(result.data.product_images);
+                    setSizesChecked(result.productSizes);
                     reset({
                         title: result.data.title,
                         category_id: result.data.category_id,
@@ -432,6 +435,14 @@ const Edit = ({ placeholder }) => {
                                                             {
                                                             ...register("sizes")
                                                             }
+                                                            onChange={(e) => {
+                                                                if (e.target.checked) {
+                                                                    setSizesChecked([...sizesChecked, size.id])
+                                                                } else {
+                                                                    setSizesChecked(sizesChecked.filter(sid => size.id !== sid))
+                                                                }
+                                                            }}
+                                                            checked={sizesChecked.includes(size.id)}
                                                             type="checkbox" className="form-check-input" value={size.id} id={`size-${size.id}`} />
                                                         <label htmlFor={`size-${size.id}`} className="form-check-label ps-2">
                                                             {size.name}
