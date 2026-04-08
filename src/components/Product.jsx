@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Layout from './common/Layout'
 import { Link, useParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -14,6 +14,8 @@ import { Rating } from 'react-simple-star-rating'
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { apiUrl } from '../components/common/http'
+import { CartContext } from './context/Cart';
+import { toast } from 'react-toastify';
 
 
 
@@ -26,6 +28,9 @@ const Product = () => {
     const params = useParams();
     const [productImages, setProductImages] = useState([]);
     const [productSizes, setProductSizes] = useState([]);
+    const [sizeSelected, setSizeSelected] = useState(null);
+
+    const { addToCart } = useContext(CartContext);
 
 
     const fetchProduct = () => {
@@ -39,7 +44,6 @@ const Product = () => {
             .then(res => res.json())
             .then(result => {
                 if (result.status === 200) {
-                    console.log(result);
                     setProduct(result.data);
                     setProductImages(result.data.product_images);
                     setProductSizes(result.data.product_sizes);
@@ -48,6 +52,24 @@ const Product = () => {
                 }
             })
     }
+
+    const handleAddToCart = () => {
+        console.log(sizeSelected);
+        if (productSizes.length > 0) {
+            if (sizeSelected == null) {
+                toast.error("Please select a size");
+            }
+            else {
+                addToCart(product, sizeSelected);
+                toast.success("product add to cart");
+            }
+        } else {
+            addToCart(product, null);
+            toast.success("product add to cart");
+
+        }
+    }
+
 
     React.useEffect(() => {
         fetchProduct();
@@ -169,7 +191,11 @@ const Product = () => {
                                 {
                                     productSizes && productSizes.map(product_size => {
                                         return (
-                                            <button className="btn btn-size ms-1">{product_size.size.name}</button>
+                                            <button
+                                                key={`p-size-${product_size.id}`}
+                                                onClick={() => setSizeSelected(product_size.size.name)}
+                                                className={`btn btn-size ms-1 ${sizeSelected == product_size.size.name ? 'active' : ''}`}
+                                            >{product_size.size.name}</button>
                                         )
                                     })
                                 }
@@ -178,7 +204,9 @@ const Product = () => {
                         </div>
 
                         <div className="add-to-cart my-4">
-                            <button className="btn btn-primary text-uppercase">Add to Cart</button>
+                            <button
+                                onClick={() => handleAddToCart()}
+                                className="btn btn-primary text-uppercase">Add to Cart</button>
                         </div>
                         <hr />
 
