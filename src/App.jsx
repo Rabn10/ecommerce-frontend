@@ -25,6 +25,7 @@ import Register from './components/Register'
 import { default as UserLogin } from './components/Login'
 import Profile from './components/Profile'
 import { RequireAuth } from './components/RequireAuth'
+import Confirmation from './components/Confirmation'
 
 
 function App() {
@@ -38,13 +39,25 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<CheckOut />} />
+          {/* <Route path="/checkout" element={<CheckOut />} /> */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<UserLogin />} />
 
           <Route path="/profile" element={
             <RequireAuth>
               <Profile />
+            </RequireAuth>
+          } />
+
+          <Route path="/checkout" element={
+            <RequireAuth>
+              <CheckOut />
+            </RequireAuth>
+          } />
+
+          <Route path="/order/confirmation/:id" element={
+            <RequireAuth>
+              <Confirmation />
             </RequireAuth>
           } />
 
