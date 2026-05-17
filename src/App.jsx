@@ -28,6 +28,8 @@ import { RequireAuth } from './components/RequireAuth'
 import Confirmation from './components/Confirmation'
 import ShowOrders from './components/admin/orders/showOrders'
 import OrderDetail from './components/admin/orders/OrderDetail'
+import MyOrders from './components/front/MyOrders'
+import {default as UserOrderDetail} from './components/front/OrderDetail'
 
 
 function App() {
@@ -48,6 +50,18 @@ function App() {
           <Route path="/profile" element={
             <RequireAuth>
               <Profile />
+            </RequireAuth>
+          } />
+
+          <Route path="/orders" element={
+            <RequireAuth>
+              <MyOrders />
+            </RequireAuth>
+          } />
+
+          <Route path="/order/detail/:id" element={
+            <RequireAuth>
+              <UserOrderDetail/>
             </RequireAuth>
           } />
 

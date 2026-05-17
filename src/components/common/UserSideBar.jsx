@@ -11,10 +11,10 @@ const UserSideBar = () => {
             <div className="card-body p-4">
                 <ul>
                     <li>
-                        <Link to="/account">Account</Link>
+                        <Link to="/profile">Account</Link>
                     </li>
                     <li>
-                        <Link to="#">Orders</Link>
+                        <Link to="/orders">Orders</Link>
                     </li>
                     <li>
                         <Link to="#">Change Password</Link>
