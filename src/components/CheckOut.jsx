@@ -21,8 +21,36 @@ const CheckOut = () => {
         register,
         handleSubmit,
         watch,
+        reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: async () => {
+            fetch(`${apiUrl}/get-account-detail`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "accept": "application/json",
+                    "Authorization": `Bearer ${userToken()}`
+                },
+            })
+                .then(res => res.json())
+                .then(result => {
+                    reset(
+                        {
+                            name: result.data.name,
+                            email: result.data.email,
+                            // phone: result.data.phone,
+                            address: result.data.address,
+                            city: result.data.city,
+                            state: result.data.state,
+                            zip: result.data.zip,
+                            mobile: result.data.mobile
+
+                        }
+                    );
+                })
+        }
+    });
 
     const processOrder = (data) => {
         if (paymentMethod === 'cod') {
